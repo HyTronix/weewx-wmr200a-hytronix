@@ -11,28 +11,47 @@ Please direct any questions/comments/experiences to John E.P. Hynes/HyTronix <jo
 
 **The driver is unsupported**
 
-WeeWX V4 and Python 3.x compatible.
+WeeWX V4 and WeeWX V5 compatible.
 
 ## Installation
 
-1. Install WeeWX, selecting 'Simulator' driver. See directions at [http://weewx.com/docs/usersguide.htm#installing](http://weewx.com/docs/usersguide.htm#installing)
+1. Install WeeWX the normal way.
 
+2. Install the driver. How you do this depends on whether you are using WeeWX 4.x or V5.x
 
-2. Download the wmr200 driver
+    2a. For WeeWX 4.x:
+    ```shell
+    # Download the driver
+    wget -O weewx-wmr200.zip https://github.com/weewx/weewx-wmr200/archive/main.zip
+    # Install:
+    sudo weewx_extension --install=weewx-wmr200.zip
+    ```
 
-       wget -O weewx-wmr200a-hytronix.zip https://github.com/HyTronix/weewx-wmr200a-hytronix/archive/refs/heads/main.zip 
+   2b. For WeeWX 5.x:
 
-3. Install the driver
+    ```shell
+    weectl install https://github.com/weewx/weewx-wmr200/archive/main.zip
+    ```
 
-        sudo weectl extension install weewx-wmr200a-hytronix.zip
+3. Configure the driver
 
-4. Configure the driver
+    3a. For WeeWX 4.x:
 
-        sudo weectl station reconfigure --driver=user.wmr200
+    ```shell
+    sudo wee_config --reconfigure --driver=user.wmr200 --no-prompt
+    ```
 
-5. Start WeeWX
+    3b. For WeeWX 5.x:
 
-        sudo systemctl start weewx 
+    ```shell
+    weectl station reconfigure --driver=user.wmr200
+    ```
+
+4. Start WeeWX
+
+    ```shell
+    sudo systemctl start weewx 
+    ```
 
 ## Options
 
@@ -82,7 +101,7 @@ If `True`, emit sensor faults and failures to log. Default is `True`.
 
 This section defines the mapping between observations from remote sensors and the fields in the database.
 
-For example, this would associate extraTemp1 with the remote T/H sensor on channel 5:
+For example, this would associate `extraTemp1` with the remote T/H sensor on channel 5:
 
 ```ini
 [[sensor_map]]
