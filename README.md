@@ -24,15 +24,15 @@ WeeWX V4 and Python 3.x compatible.
 
 3. Install the driver
 
-        sudo wee_extension --install=weewx-wmr200a-hytronix.zip
+        sudo weectl extension install weewx-wmr200a-hytronix.zip
 
 4. Configure the driver
 
-        sudo wee_config --reconfigure --driver=user.wmr200 --no-prompt
+        sudo weectl station reconfigure --driver=user.wmr200
 
 5. Start WeeWX
 
-        sudo /etc/init.d/weewx start
+        sudo systemctl start weewx 
 
 ## Options
 
