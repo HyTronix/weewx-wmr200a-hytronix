@@ -20,7 +20,7 @@ WeeWX V4 and Python 3.x compatible.
 
 2. Download the wmr200 driver
 
-       wget -O weewx-wmr200a-hytronix.zip https://github.com/weewx/weewx-wmr200a-hytronix/archive/main.zip
+       wget -O weewx-wmr200a-hytronix.zip https://github.com/HyTronix/weewx-wmr200a-hytronix/archive/refs/heads/main.zip 
 
 3. Install the driver
 
