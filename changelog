@@ -1,9 +1,20 @@
-3.5.2 18feb21
-* Restarting the driver now refinds the device on the USB bus. Fixes issue #1
+# Changelog
 
-3.5.1 04jan21
-* Copied udev rules over.
+## - 2026-06-26
+### Fixed
+- Added exception handling in write_device() to resolve long-standing USB communication error (no retry/clear/reset on pipe stall)
+- Added USB device release to open_device() in case of exception recovery
+- Added to udev rule to disable autosuspend (just in case...)
 
-3.5.0 15dec20
-* WMR200 driver split off of the mainstream WeeWX distribution, and made
-into a separate, unsupported, install.
+## - 2021-02-18
+### Fixed
+- Restarting the driver now refinds the device on the USB bus. Fixes issue #1
+
+## - 2021-01-04
+### Added
+- Copied udev rules over.
+
+## - 2020-12-15
+### Changed
+- WMR200 driver split off of the mainstream WeeWX distribution, and made into a separate, unsupported, install.
+

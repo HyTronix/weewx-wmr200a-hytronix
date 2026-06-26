@@ -1,9 +1,13 @@
 # WMR200
 
-This is a driver for the Oregon Scientific WMR200 weather station for the WeeWX weather system. It was originally part
-of the main WeeWX distribution, but was split off in December 2020 because of continuing support problems. In
-particular, it is known to get occasional "Resource busy" errors. See WeeWX
-issue [#578](https://github.com/weewx/weewx/issues/578).
+This is a driver for the Oregon Scientific WMR200/A weather station for the WeeWX weather system.
+
+A long-standing issue with USB "Resource busy" errors caused this to be removed from the mainline distribution
+in December of 2020 due to lack of continuing support. See WeeWX issue [#578](https://github.com/weewx/weewx/issues/578).
+
+As of June 26, 2026 I believe I have identified and corrected the core issue in this version.
+
+Please direct any questions/comments/experiences to John E.P. Hynes/HyTronix <john@hytronix.com>
 
 **The driver is unsupported**
 
@@ -16,11 +20,11 @@ WeeWX V4 and Python 3.x compatible.
 
 2. Download the wmr200 driver
 
-       wget -O weewx-wmr200.zip https://github.com/weewx/weewx-wmr200/archive/main.zip
+       wget -O weewx-wmr200a-hytronix.zip https://github.com/weewx/weewx-wmr200a-hytronix/archive/main.zip
 
 3. Install the driver
 
-        sudo wee_extension --install=weewx-wmr200.zip
+        sudo wee_extension --install=weewx-wmr200a-hytronix.zip
 
 4. Configure the driver
 

@@ -50,7 +50,7 @@ import weewx.drivers
 import weeutil.weeutil
 
 DRIVER_NAME = 'WMR200'
-DRIVER_VERSION = "3.5.2"
+DRIVER_VERSION = "3.5.3"
 
 log = logging.getLogger(__name__)
 
@@ -191,6 +191,12 @@ class UsbDevice(object):
         except usb.USBError:
             pass
 
+        # Potentially recover from prior crash
+        try:
+            self.handle.releaseInterface()
+        except usb.USBError:
+            pass
+
         try:
             self.handle.claimInterface(self.interface)
         except usb.USBError as exception:
@@ -275,24 +281,36 @@ class UsbDevice(object):
             log.error(msg)
             raise weewx.WeeWxIOError(msg)
 
-        try:
-            if DEBUG_WRITES:
-                log.debug('write_device(): %s' % buf)
-            self.byte_cnt_wr += len(buf)
-            self.handle.controlMsg(
-                usb.TYPE_CLASS + usb.RECIP_INTERFACE, # requestType
-                0x0000009,                            # request
-                buf,
-                value,                                # value
-                0x0000000,                            # index
-                _WMR200_USB_RESET_TIMEOUT)            # timeout
-        except usb.USBError as exception:
-            msg = ('write_device() Unable to'
-                   ' send USB control message %s' % exception)
-            log.error(msg)
-            # Convert to a Weewx error:
-            raise weewx.WeeWxIOError(exception)
+        for attempt in range(3):
+            try:
+                if DEBUG_WRITES:
+                    log.debug('write_device(): %s' % buf)
+                self.byte_cnt_wr += len(buf)
+                self.handle.controlMsg(
+                    usb.TYPE_CLASS + usb.RECIP_INTERFACE, # requestType
+                    0x0000009,                            # request
+                    buf,
+                    value,                                # value
+                    0x0000000,                            # index
+                    _WMR200_USB_RESET_TIMEOUT)            # timeout
+                return # success
+            except usb.USBError as exception:
+                if exception.errno == 32: # EPIPE/Pipe stall
+                    log.warning('write_device() Pipe stall on attempt %d, will clear/halt/retry' % (attempt + 1))
+                    try:
+                        self.handle.clearHalt(0x00)
+                    except usb.USBError:
+                        pass
+                    time.sleep(0.5)
+                else:
+                    msg = ('write_device() Unable to send USB control message %s' % exception)
+                    log.error(msg)
+                    # Convert to a Weewx error:
+                    raise weewx.WeeWxIOError(exception)
 
+        msg = 'write_device() Failed after 3 attempts'
+        log.error(msg)
+        raise weewx.WeeWxIOError(msg)
 
 class Packet(object):
     """Top level class for all WMR200 packets.
